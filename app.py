@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
+import json
 import os
 
 app = Flask(__name__)
@@ -25,9 +26,32 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     if file and allowed_file(file.filename):
+        # Change filename to secure filename 
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
+
+        # Start face recognition
+        # ...
+
+        # Insert image into database
+        if (os.path.exists('db.json') == False):
+            # Create it
+            with open('db.json', 'w') as f:
+                f.write('{"images": []}')
+
+
+        with open('db.json', 'r') as user_file:
+            file_contents = json.load(user_file)
+
+        file_contents['images'].append({
+            'filename': filename,
+            'classification': -1,
+            'is_primary': False
+        })
+        
+        json.dump(file_contents, open('db.json', 'w'), indent=4)
+    
         return jsonify({'message': 'File uploaded successfully', 'filename': filename}), 200
     else:
         return jsonify({'error': 'File type not allowed'}), 400
