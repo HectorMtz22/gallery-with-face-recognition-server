@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 
@@ -31,6 +31,14 @@ def upload_file():
         return jsonify({'message': 'File uploaded successfully', 'filename': filename}), 200
     else:
         return jsonify({'error': 'File type not allowed'}), 400
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
 if __name__ == '__main__':
     app.run(debug=True)
