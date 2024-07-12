@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 import json
 import os
-
+import datetime
 app = Flask(__name__)
 
 # Directorio donde se guardarán las imágenes
@@ -27,7 +27,10 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
     if file and allowed_file(file.filename):
         # Change filename to secure filename 
-        filename = secure_filename(file.filename)
+        suffix = secure_filename(file.filename)
+        date = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        filename = f'{date}_{suffix}'
+
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
