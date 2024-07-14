@@ -103,6 +103,12 @@ def get_categories():
         file_contents = json.load(user_file)
         return jsonify(file_contents['categories'])
 
+@app.route('/gallery', methods=['GET'])
+def get_gallery():
+    with open('db.json', 'r') as user_file:
+        file_contents = json.load(user_file)
+        return jsonify(file_contents['images'])
+
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
