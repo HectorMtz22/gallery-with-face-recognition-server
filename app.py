@@ -3,10 +3,13 @@ from werkzeug.utils import secure_filename
 import json
 import os
 import datetime
+from flask_cors import CORS
+
 # Import our face recognition module
 from reconocimiento import initialize_categories, get_image_category
 
 app = Flask(__name__)
+CORS(app)
 
 # Directorio donde se guardarán las imágenes
 UPLOAD_FOLDER = 'uploads'
