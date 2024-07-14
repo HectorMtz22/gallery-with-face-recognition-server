@@ -10,6 +10,12 @@ UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+# Crear Database si no existe
+if (os.path.exists('db.json') == False):
+    # Create it
+    with open('db.json', 'w') as f:
+        f.write('{"images": []}')
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Extensiones permitidas
@@ -36,13 +42,6 @@ def upload_file():
 
         # Start face recognition
         # ...
-
-        # Insert image into database
-        if (os.path.exists('db.json') == False):
-            # Create it
-            with open('db.json', 'w') as f:
-                f.write('{"images": []}')
-
 
         with open('db.json', 'r') as user_file:
             file_contents = json.load(user_file)
