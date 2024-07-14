@@ -97,6 +97,12 @@ def upload_file():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/categories', methods=['GET'])
+def get_categories():
+    with open('db.json', 'r') as user_file:
+        file_contents = json.load(user_file)
+        return jsonify(file_contents['categories'])
+
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
