@@ -106,6 +106,24 @@ def get_categories():
         file_contents = json.load(user_file)
         return jsonify(file_contents['categories'])
 
+@app.route('/categories/<category>', methods=['GET'])
+def get_category(category):
+    # Check if category exists
+    with open('db.json', 'r') as user_file:
+        file_contents = json.load(user_file)
+        if category not in file_contents['categories']:
+            return jsonify({'error': 'Category not found'}), 404
+    # Check if category image exists in the folder 
+    # With jpg, png and jpeg
+    if os.path.exists(f'reconocimiento/{category}.jpg'):
+        return send_from_directory('reconocimiento', f'{category}.jpg')
+    elif os.path.exists(f'reconocimiento/{category}.png'):
+        return send_from_directory('reconocimiento', f'{category}.png')
+    elif os.path.exists(f'reconocimiento/{category}.jpeg'):
+        return send_from_directory('reconocimiento', f'{category}.jpeg')
+    else:
+        return jsonify({'error': 'Category image not found'}), 404
+
 @app.route('/gallery', methods=['GET'])
 def get_gallery():
     with open('db.json', 'r') as user_file:
