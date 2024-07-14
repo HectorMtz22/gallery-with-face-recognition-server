@@ -20,7 +20,7 @@ def initialize_categories(reference_directory):
 
 def get_image_category(new_image_path, reference_encodings, reference_names):
     new_image = cv2.imread(new_image_path)
-    new_face_locations = face_recognition.face_locations(new_image, model="cnn")
+    new_face_locations = face_recognition.face_locations(new_image, model="hog")
 
     if new_face_locations:
         for new_face_location in new_face_locations:
