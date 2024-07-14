@@ -3,6 +3,9 @@ from werkzeug.utils import secure_filename
 import json
 import os
 import datetime
+# Import our face recognition module
+from reconocimiento import initialize_categories, get_image_category
+
 app = Flask(__name__)
 
 # Directorio donde se guardarán las imágenes
@@ -23,6 +26,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/initialize', methods=['POST'])
+def initialize():
+    data = request.json
+    reference_directory = 'reconocimiento'
+    global reference_encodings, reference_names
+    reference_encodings, reference_names = initialize_categories(reference_directory)
+    return jsonify({"status": "Categorías inicializadas"})
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
