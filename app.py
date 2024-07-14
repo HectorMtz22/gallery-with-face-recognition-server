@@ -35,6 +35,18 @@ def initialize():
     reference_directory = 'reconocimiento'
     global reference_encodings, reference_names
     reference_encodings, reference_names = initialize_categories(reference_directory)
+
+    # Update db.json
+    with open('db.json', 'r') as user_file:
+        file_contents = json.load(user_file)
+        # Reset categories
+        file_contents['categories'] = []
+
+    for name in reference_names:
+        file_contents['categories'].append(name)
+
+    json.dump(file_contents, open('db.json', 'w'), indent=4)
+
     print({"status": "Categorías inicializadas"})
 
 @app.route('/upload', methods=['POST'])
