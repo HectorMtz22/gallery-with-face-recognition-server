@@ -38,9 +38,9 @@ def get_image_category(new_image_path, reference_encodings, reference_names):
         return "No se encontraron caras en la nueva imagen."
 
 # Ejemplo de uso:
-reference_directory = "reconocimiento"
-reference_encodings, reference_names = initialize_categories(reference_directory)
+# reference_directory = "reconocimiento"
+# reference_encodings, reference_names = initialize_categories(reference_directory)
 
-new_image_path = "uploads/jonathan-1.jpeg"  # Cambia el nombre de la imagen según sea necesario
-category = get_image_category(new_image_path, reference_encodings, reference_names)
-print("Categoría:", category)
+# new_image_path = "uploads/jonathan-1.jpeg"  # Cambia el nombre de la imagen según sea necesario
+# category = get_image_category(new_image_path, reference_encodings, reference_names)
+# print("Categoría:", category)
