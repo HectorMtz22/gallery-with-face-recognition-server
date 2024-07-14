@@ -1,3 +1,4 @@
 /uploads
 /reconocimiento
+/__pycache__
 db.json
