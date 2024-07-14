@@ -14,7 +14,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 if (os.path.exists('db.json') == False):
     # Create it
     with open('db.json', 'w') as f:
-        f.write('{"images": []}')
+        f.write('{"images": [], "categories": []}')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
