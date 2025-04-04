@@ -6,3 +6,4 @@ db.json
 # Carpeta de env
 .env
 env/
+tutorial_env/
