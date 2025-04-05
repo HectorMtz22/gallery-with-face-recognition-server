@@ -44,19 +44,23 @@ def initialize():
     # Update db.json
     with open('db.json', 'r') as user_file:
         file_contents = json.load(user_file)
-        # Reset categories
-        file_contents['categories'] = []
 
     counter = 0
     for category_id in reference_names:
-        # Add the category to the database
-        # Create a random name for the category
-        counter += 1
-        file_contents['categories'].append({
-            'name': 'Persona ' + str(counter),
-            'id': category_id
-        })
+        # Check if category already exists
+        for category in file_contents['categories']:
+            if category['id'] == category_id:
+                break
+        else:
+            # If not, create a new category
+            category_id = str(uuid.uuid4())
+            file_contents['categories'].append({
+                'name': 'Persona ' + str(counter),
+                'id': category_id
+            })
+            counter += 1
 
+    # Save the updated categories to db.json
     json.dump(file_contents, open('db.json', 'w'), indent=4)
 
     print({"status": "Categorías inicializadas"})
