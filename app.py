@@ -5,6 +5,8 @@ import os
 import datetime
 from flask_cors import CORS
 
+# Import a uuid generator
+import uuid
 # Import our face recognition module
 from reconocimiento import initialize_categories, get_image_category
 
@@ -35,7 +37,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def initialize():
-    reference_directory = 'reconocimiento'
+    reference_directory = UPLOAD_FOLDER
     global reference_encodings, reference_names
     reference_encodings, reference_names = initialize_categories(reference_directory)
 
@@ -45,8 +47,15 @@ def initialize():
         # Reset categories
         file_contents['categories'] = []
 
-    for name in reference_names:
-        file_contents['categories'].append(name)
+    counter = 0
+    for category_id in reference_names:
+        # Add the category to the database
+        # Create a random name for the category
+        counter += 1
+        file_contents['categories'].append({
+            'name': 'Persona ' + str(counter),
+            'id': category_id
+        })
 
     json.dump(file_contents, open('db.json', 'w'), indent=4)
 
@@ -83,11 +92,11 @@ def upload_file():
         # json.dump(file_contents, open('db.json', 'w'), indent=4)
 
         # Categorizar la imagen
-        category = get_image_category(file_path, reference_encodings, reference_names)
+        category_id = get_image_category(file_path, reference_encodings, reference_names)
 
         for image in file_contents['images']:
             if image['filename'] == filename:
-                image['classification'] = category
+                image['category_id'] = category_id
                 break
 
         json.dump(file_contents, open('db.json', 'w'), indent=4)

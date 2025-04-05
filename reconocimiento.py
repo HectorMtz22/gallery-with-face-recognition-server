@@ -2,19 +2,54 @@ import cv2
 import face_recognition
 import os
 
+import uuid
+import json
+
 def initialize_categories(reference_directory):
     reference_encodings = []
     reference_names = []
+    processed_names = set()  # Mantener un registro de los nombres ya procesados
 
-    for file_name in os.listdir(reference_directory):
+    categories = []
+
+    # Verifica las categorías en db.json
+    with open('db.json', 'r') as user_file:
+        file_contents = json.load(user_file)
+        images = file_contents['images']
+        for image in images:
+            if image['classification'] != -1:
+                if image['filename'] not in processed_names:
+                    # Solo agrega una imagen
+                    categories.append(image)
+                    processed_names.add(image['filename'])  # Marcar este nombre como procesado
+
+    # Procesar las imágenes de referencia
+    # Verifica si el directorio de referencia existe
+    if not os.path.exists(reference_directory):
+        raise FileNotFoundError(f"El directorio {reference_directory} no existe.")
+    # Verifica si hay imágenes en el directorio de referencia
+    if not os.listdir(reference_directory):
+        raise FileNotFoundError(f"No se encontraron imágenes en el directorio {reference_directory}.")
+    # Procesar las imágenes de referencia
+    # Iterar sobre las imágenes en el directorio de referencia
+    print("Inicializando categorías...")
+    for element in categories:
+        print(element)
+        file_name = element['filename']
+        classification = element['classification']
+
         if file_name.endswith(('.jpg', '.jpeg', '.png')):
+            # Obtener el nombre de la imagen sin la extensión
+            # name_without_extension = os.path.splitext(file_name)[0]
+
             image_path = os.path.join(reference_directory, file_name)
             image = cv2.imread(image_path)
             face_locations = face_recognition.face_locations(image)
             if face_locations:
                 face_encodings = face_recognition.face_encodings(image, known_face_locations=[face_locations[0]])[0]
+                # Si hay más de una cara en la imagen, se toma la primera
                 reference_encodings.append(face_encodings)
-                reference_names.append(os.path.splitext(file_name)[0])  # Usar el nombre del archivo sin la extensión como categoría
+                reference_names.append(classification)
     
     return reference_encodings, reference_names
 
