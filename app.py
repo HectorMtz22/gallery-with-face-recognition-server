@@ -39,7 +39,14 @@ def allowed_file(filename):
 def initialize():
     reference_directory = UPLOAD_FOLDER
     global reference_encodings, reference_names
-    reference_encodings, reference_names = initialize_categories(reference_directory)
+    try :
+        # Initialize face recognition categories
+        reference_encodings, reference_names = initialize_categories(reference_directory)
+    except Exception as e:
+        print(f"Error initializing categories: {e}")
+        # If there is an error, we can set reference_encodings and reference_names to empty lists
+        reference_encodings = []
+        reference_names = []
 
     # Update db.json
     with open('db.json', 'r') as user_file:
